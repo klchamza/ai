@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CyberWordAI — Hamza Hack Team</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon-green: #00ff88;
+    --neon-cyan: #00d4ff;
+    --neon-red: #ff3366;
+    --neon-purple: #bf5fff;
+    --neon-yellow: #ffcc00;
+    --bg-dark: #030508;
+    --bg-card: rgba(10,15,25,0.85);
+    --border-dim: rgba(0,255,136,0.15);
+    --text-primary: #e8f4f8;
+    --text-muted: #5a7a8a;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-display: 'Orbitron', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SPACE CANVAS ── */
+  #space-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NEBULA OVERLAY ── */
+  .nebula {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 40% at 15% 20%, rgba(0,80,140,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 85% 80%, rgba(80,0,120,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(0,180,100,0.05) 0%, transparent 70%);
+  }
+
+  /* ── MAIN LAYOUT ── */
+  #app {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    border-bottom: 1px solid var(--border-dim);
+    background: rgba(3,5,8,0.7);
+    backdrop-filter: blur(12px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--neon-green);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: var(--neon-green);
+    box-shadow: 0 0 12px rgba(0,255,136,0.3);
+    animation: pulse-border 2.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse-border {
+    0%, 100% { box-shadow: 0 0 12px rgba(0,255,136,0.3); }
+    50% { box-shadow: 0 0 24px rgba(0,255,136,0.6); }
+  }
+
+  .logo-text {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 20px rgba(0,255,136,0.4);
+  }
+
+  .logo-sub {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    box-shadow: 0 0 8px var(--neon-green);
+    animation: blink 1.8s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .header-time {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 3.5rem 2rem 2.5rem;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--neon-green);
+    border: 1px solid rgba(0,255,136,0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #fff;
+    text-shadow: 0 0 40px rgba(0,255,136,0.2);
+    margin-bottom: 0.8rem;
+  }
+
+  .hero-title span {
+    color: var(--neon-green);
+    text-shadow: 0 0 30px rgba(0,255,136,0.5);
+  }
+
+  .hero-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.8;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── MODE SELECTOR ── */
+  .mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 1rem 2rem 2rem;
+    flex-wrap: wrap;
+  }
+
+  .mode-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: rgba(10,15,25,0.6);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+  }
+
+  .mode-btn:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .mode-btn.active {
+    color: #fff;
+    border-color: var(--mode-color);
+    background: rgba(var(--mode-rgb), 0.12);
+    box-shadow: 0 0 16px rgba(var(--mode-rgb), 0.2);
+  }
+
+  .mode-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--mode-color);
+    box-shadow: 0 0 6px var(--mode-color);
+  }
+
+  /* ── CHAT CONTAINER ── */
+  .chat-wrapper {
+    flex: 1;
+    max-width: 820px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* ── CHAT HEADER BAR ── */
+  .chat-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px 8px 0 0;
+    backdrop-filter: blur(8px);
+  }
+
+  .chat-ai-name {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--active-color, var(--neon-green));
+    text-shadow: 0 0 12px var(--active-color, var(--neon-green));
+    transition: all 0.3s;
+  }
+
+  .chat-ai-desc {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .chat-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .chat-action-btn {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .chat-action-btn:hover {
+    border-color: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+
+  /* ── MESSAGES ── */
+  .messages-area {
+    height: 420px;
+    overflow-y: auto;
+    padding: 16px;
+    background: rgba(3,5,8,0.75);
+    border-left: 1px solid var(--border-dim);
+    border-right: 1px solid var(--border-dim);
+    backdrop-filter: blur(6px);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+  }
+
+  .messages-area::-webkit-scrollbar { width: 4px; }
+  .messages-area::-webkit-scrollbar-track { background: transparent; }
+  .messages-area::-webkit-scrollbar-thumb { background: rgba(0,255,136,0.2); border-radius: 2px; }
+
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    animation: msg-in 0.25s ease;
+  }
+
+  @keyframes msg-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-meta {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .msg-meta .role-tag {
+    font-size: 0.58rem;
+    padding: 1px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .msg.user { align-items: flex-end; }
+  .msg.user .msg-meta { justify-content: flex-end; }
+
+  .msg.user .role-tag {
+    background: rgba(0,212,255,0.1);
+    color: var(--neon-cyan);
+    border: 1px solid rgba(0,212,255,0.25);
+  }
+
+  .msg.assistant .role-tag {
+    background: rgba(0,255,136,0.08);
+    color: var(--neon-green);
+    border: 1px solid rgba(0,255,136,0.2);
+  }
+
+  .msg-bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .msg.user .msg-bubble {
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: var(--text-primary);
+  }
+
+  .msg.assistant .msg-bubble {
+    background: rgba(10,20,15,0.8);
+    border: 1px solid rgba(0,255,136,0.12);
+    color: #c8e8d4;
+  }
+
+  /* Code blocks inside messages */
+  .msg-bubble code {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(0,255,136,0.15);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.75em;
+    color: var(--neon-yellow);
+  }
+
+  .msg-bubble pre {
+    background: rgba(0,0,0,0.6);
+    border: 1px solid rgba(0,255,136,0.12);
+    border-left: 2px solid var(--neon-green);
+    padding: 10px 12px;
+    border-radius: 0 6px 6px 0;
+    margin: 8px 0;
+    overflow-x: auto;
+    font-size: 0.72rem;
+    color: #a8e8b4;
+  }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 14px;
+    background: rgba(10,20,15,0.8);
+    border: 1px solid rgba(0,255,136,0.12);
+    border-radius: 8px;
+    width: fit-content;
+    animation: msg-in 0.25s ease;
+  }
+
+  .typing-indicator span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    opacity: 0.4;
+    animation: typing-dot 1.2s ease-in-out infinite;
+  }
+
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing-dot {
+    0%, 80%, 100% { opacity: 0.4; transform: scale(1); }
+    40% { opacity: 1; transform: scale(1.3); }
+  }
+
+  .welcome-msg {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 2;
+  }
+
+  .welcome-msg .wm-title {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--neon-green);
+    margin-bottom: 6px;
+    text-shadow: 0 0 16px rgba(0,255,136,0.4);
+  }
+
+  /* ── INPUT AREA ── */
+  .input-area {
+    padding: 12px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    backdrop-filter: blur(8px);
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  #user-input {
+    flex: 1;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0,255,136,0.12);
+    border-radius: 6px;
+    padding: 9px 13px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    resize: none;
+    min-height: 40px;
+    max-height: 140px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  #user-input::placeholder { color: var(--text-muted); }
+
+  #user-input:focus {
+    border-color: rgba(0,255,136,0.3);
+    box-shadow: 0 0 0 2px rgba(0,255,136,0.06);
+  }
+
+  .send-btn {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,255,136,0.3);
+    background: rgba(0,255,136,0.08);
+    color: var(--neon-green);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover {
+    background: rgba(0,255,136,0.18);
+    box-shadow: 0 0 16px rgba(0,255,136,0.25);
+  }
+
+  .send-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* ── QUICK COMMANDS ── */
+  .quick-cmds {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 0 0 4px;
+  }
+
+  .qcmd {
+    font-size: 0.62rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .qcmd:hover {
+    border-color: rgba(0,255,136,0.25);
+    color: var(--neon-green);
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 1.5rem 2rem 0;
+    max-width: 820px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--neon-green);
+    text-shadow: 0 0 16px rgba(0,255,136,0.4);
+  }
+
+  .stat-label {
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.12em;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  footer span {
+    color: var(--neon-green);
+    opacity: 0.7;
+  }
+
+  /* ── NOTIFICATION ── */
+  .notif {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 10px 16px;
+    background: rgba(10,20,15,0.95);
+    border: 1px solid var(--neon-green);
+    border-radius: 6px;
+    font-size: 0.72rem;
+    color: var(--neon-green);
+    z-index: 999;
+    letter-spacing: 0.08em;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+
+  .notif.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SCAN LINE ── */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="space-canvas"></canvas>
+<div class="nebula"></div>
+<div class="scanline"></div>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⬡</div>
+      <div>
+        <div class="logo-text">CYBERWORD AI</div>
+        <div class="logo-sub">Hamza Hack Team</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <div class="header-status">
+        <div class="status-dot"></div>
+        <span>SYSTEM ONLINE</span>
+      </div>
+      <div class="header-time" id="clock">--:--:--</div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">▸ AI TERMINAL v2.0</div>
+    <h1 class="hero-title">HACK THE <span>FUTURE</span></h1>
+    <p class="hero-desc">Siber güvenlik, etik hacking, python ve daha fazlası için geliştirilmiş yapay zeka terminal arayüzü.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-val" id="msg-count">0</div>
+      <div class="stat-label">Mesaj</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">4</div>
+      <div class="stat-label">AI Modu</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">70B</div>
+      <div class="stat-label">Model</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val" style="font-size:0.9rem;" id="session-time">00:00</div>
+      <div class="stat-label">Oturum</div>
+    </div>
+  </div>
+
+  <!-- MODE SELECTOR -->
+  <div class="mode-selector">
+    <button class="mode-btn active"
+      style="--mode-color:#00ff88;--mode-rgb:0,255,136"
+      data-mode="cyber" onclick="switchMode(this)">
+      <div class="mode-dot" style="--mode-color:#00ff88"></div>
+      CyberWordAI
+    </button>
+    <button class="mode-btn"
+      style="--mode-color:#00d4ff;--mode-rgb:0,212,255"
+      data-mode="english" onclick="switchMode(this)">
+      <div class="mode-dot" style="--mode-color:#00d4ff"></div>
+      EnglishWordAI
+    </button>
+    <button class="mode-btn"
+      style="--mode-color:#bf5fff;--mode-rgb:191,95,255"
+      data-mode="python" onclick="switchMode(this)">
+      <div class="mode-dot" style="--mode-color:#bf5fff"></div>
+      PyWordAI
+    </button>
+    <button class="mode-btn"
+      style="--mode-color:#ff3366;--mode-rgb:255,51,102"
+      data-mode="chat" onclick="switchMode(this)">
+      <div class="mode-dot" style="--mode-color:#ff3366"></div>
+      ChatWordAI
+    </button>
+  </div>
+
+  <!-- CHAT AREA -->
+  <div class="chat-wrapper">
+    <!-- Quick Commands -->
+    <div class="quick-cmds" id="quick-cmds"></div>
+
+    <!-- Chat Box -->
+    <div>
+      <div class="chat-header-bar">
+        <div>
+          <div class="chat-ai-name" id="ai-name">CyberWordAI</div>
+          <div class="chat-ai-desc" id="ai-desc">Siber Güvenlik & Etik Hacking Uzmanı</div>
+        </div>
+        <div class="chat-actions">
+          <button class="chat-action-btn" onclick="clearChat()">TEMIZLE</button>
+          <button class="chat-action-btn" onclick="exportChat()">DIŞA AKTAR</button>
+        </div>
+      </div>
+
+      <div class="messages-area" id="messages">
+        <div class="welcome-msg" id="welcome-msg">
+          <div class="wm-title" id="wm-title">[ CyberWordAI HAZIR ]</div>
+          <div id="wm-sub">Siber güvenlik, hacking, ağ güvenliği ve penetrasyon testi konularında sorularını bekliyor...</div>
+        </div>
+        <div class="typing-indicator" id="typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <textarea id="user-input" placeholder="Komut gir..." rows="1"
+          onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    CYBERWORD AI &nbsp;·&nbsp; HAMZA HACK TEAM &nbsp;·&nbsp; <span>LLAMA-3.3-70B</span> &nbsp;·&nbsp; POWERED BY GROQ
+  </footer>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ── SPACE CANVAS ──────────────────────────────────────────────────
+const canvas = document.getElementById('space-canvas');
+const ctx = canvas.getContext('2d');
+
+let W, H, stars = [], nebulaParts = [];
+
+function initCanvas() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  stars = [];
+  for (let i = 0; i < 280; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + 0.2,
+      opacity: Math.random() * 0.7 + 0.1,
+      speed: Math.random() * 0.15 + 0.02,
+      twinkle: Math.random() * Math.PI * 2,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      color: ['#ffffff','#aadeff','#b8ffdd','#ffe4aa'][Math.floor(Math.random()*4)]
+    });
+  }
+  // A few shooting stars
+  nebulaParts = [];
+  for (let i = 0; i < 4; i++) {
+    nebulaParts.push({
+      x: Math.random() * W,
+      y: Math.random() * H * 0.5,
+      vx: Math.random() * 0.4 + 0.1,
+      vy: Math.random() * 0.15,
+      length: Math.random() * 120 + 60,
+      opacity: 0,
+      timer: Math.random() * 600
+    });
+  }
+}
+
+function drawSpace() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw stars
+  stars.forEach(s => {
+    s.twinkle += s.twinkleSpeed;
+    const tw = Math.sin(s.twinkle) * 0.3;
+    const op = Math.max(0.05, Math.min(1, s.opacity + tw));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = s.color;
+    ctx.globalAlpha = op;
+    ctx.fill();
+
+    // Parallax drift
+    s.y += s.speed * 0.1;
+    if (s.y > H) { s.y = 0; s.x = Math.random() * W; }
+  });
+
+  // Shooting stars
+  nebulaParts.forEach(n => {
+    n.timer--;
+    if (n.timer <= 0) {
+      n.x = Math.random() * W * 0.8;
+      n.y = Math.random() * H * 0.3;
+      n.vx = Math.random() * 6 + 3;
+      n.vy = Math.random() * 2 + 1;
+      n.length = Math.random() * 100 + 60;
+      n.opacity = 0.9;
+      n.timer = Math.random() * 800 + 400;
+    }
+    if (n.opacity > 0) {
+      const grad = ctx.createLinearGradient(n.x, n.y, n.x - n.length, n.y - n.length * 0.3);
+      grad.addColorStop(0, `rgba(255,255,255,${n.opacity})`);
+      grad.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.beginPath();
+      ctx.moveTo(n.x, n.y);
+      ctx.lineTo(n.x - n.length, n.y - n.length * 0.3);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.globalAlpha = n.opacity;
+      ctx.stroke();
+      n.x += n.vx;
+      n.y += n.vy;
+      n.opacity -= 0.025;
+    }
+  });
+
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawSpace);
+}
+
+window.addEventListener('resize', initCanvas);
+initCanvas();
+drawSpace();
+
+// ── MODE CONFIG ────────────────────────────────────────────────────
+const API_KEY = 'buraya grokdan alacağın api keyi gir 021021';
+const MODEL   = 'llama-3.3-70b-versatile';
+
+const MODES = {
+  cyber: {
+    name: 'CyberWordAI',
+    color: '#00ff88',
+    desc: 'Siber Güvenlik & Etik Hacking Uzmanı',
+    welcome: '[ CyberWordAI HAZIR ]',
+    welcomeSub: 'Siber güvenlik, hacking, ağ güvenliği ve penetrasyon testi konularında sorularını bekliyor...',
+    system: "Sen CyberWordAI'sın. Hamza Hack Team tarafından geliştirildin. Türkçe konuşuyorsun, her zaman Türkçe cevap veriyorsun. Siber güvenlik ve etik hacking konularında uzmansın. Cevapların net, kesin ve hata payı olmayan bilgiler içermeli. Teknik konularda adım adım açıklama yapıyorsun. Arkadaşça ve samimi bir üslupla konuşuyorsun, abi gibi davranıyorsun. Muhabbet edilmesi gereken yerde takılıyorsun ama asıl odağın siber güvenlik, hacking, ağ güvenliği, zararlı yazılım analizi ve penetrasyon testleri. Kullanıcıyı motive ediyorsun ve ilham veriyorsun. Cevaplarında gereksiz uzun laflar etmiyorsun, direkt konuya giriyorsun.",
+    quickCmds: ['Nmap kullanımı', 'SQL Injection nedir?', 'Burp Suite nasıl kurulur?', 'Metasploit basics', 'CTF başlangıç']
+  },
+  english: {
+    name: 'EnglishWordAI',
+    color: '#00d4ff',
+    desc: 'İngilizce Öğretmeni & Dil Asistanı',
+    welcome: '[ EnglishWordAI READY ]',
+    welcomeSub: 'İngilizce öğrenmek, pratik yapmak veya dil sorularını sormak için hazır...',
+    system: "Sen bir ingilizce öğretmenisin adın EnglishWordAI. Kullanıcılar için ingilizce ile alakalı soruları yanıtla ama sen türkçe konuş türkçe anlat. Seninle ingilizce pratiği yapmak isterlerse onlara istedikleri dilde ingilizce konuş. Kısa ve net yanıtlar ver anlaşılır ol.",
+    quickCmds: ['Grammar nedir?', 'Günlük konuşma pratik', 'İngilizce kelime öğren', 'Tense kullanımı', 'IELTS hazırlık']
+  },
+  python: {
+    name: 'PyWordAI',
+    color: '#bf5fff',
+    desc: 'Python Geliştirici & Kod Asistanı',
+    welcome: '[ PyWordAI BAŞLATILIYOR ]',
+    welcomeSub: 'Python kodu yazmak, hata ayıklamak veya öğrenmek için buradayım...',
+    system: "Python kodu yazma ve uygulamalar yapma konusunda kullanıcılara yardım eden bir yapay zekasın. Senin adın PyWordAI. Arkadaşça konuş, kısa ve net anlat. Kodlarda hata yapma, en iyi şekilde yaz. Hem eğitici hem de pratik ol. Her zaman Türkçe cevap ver.",
+    quickCmds: ['Web scraping', 'Flask API kur', 'List comprehension', 'Decorator nedir?', 'OOP örnekleri']
+  },
+  chat: {
+    name: 'ChatWordAI',
+    color: '#ff3366',
+    desc: 'Sohbet & Eğlence Asistanı',
+    welcome: '[ ChatWordAI SOHBETE HAZIR ]',
+    welcomeSub: 'Muhabbet etmek, şakalaşmak veya sadece takılmak için buradayım...',
+    system: "Senin adın ChatWordAI. Sohbet ve eğlence amaçlı birisin. Kullanıcılarla sohbet et, şakalar yap, onların tarzında konuş. Bazen bilmece sor, isteseler fıkra anlat. Kankaları gibi konuş. Türkçe konuş.",
+    quickCmds: ['Fıkra anlat', 'Bilmece sor', 'Şaka yap', 'Ne konuşalım?', 'Eğlenceli bir şey söyle']
+  }
+};
+
+let currentMode = 'cyber';
+let histories = { cyber: [], english: [], python: [], chat: [] };
+let msgCount = 0;
+let sessionStart = Date.now();
+
+// ── SWITCH MODE ────────────────────────────────────────────────────
+function switchMode(btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentMode = btn.dataset.mode;
+  const m = MODES[currentMode];
+
+  document.getElementById('ai-name').textContent = m.name;
+  document.getElementById('ai-name').style.color = m.color;
+  document.getElementById('ai-name').style.textShadow = `0 0 12px ${m.color}`;
+  document.getElementById('ai-desc').textContent = m.desc;
+  document.getElementById('wm-title').textContent = m.welcome;
+  document.getElementById('wm-title').style.color = m.color;
+  document.getElementById('wm-sub').textContent = m.welcomeSub;
+
+  renderMessages();
+  renderQuickCmds();
+  showNotif(`${m.name} aktif`);
+}
+
+// ── QUICK COMMANDS ─────────────────────────────────────────────────
+function renderQuickCmds() {
+  const m = MODES[currentMode];
+  const container = document.getElementById('quick-cmds');
+  container.innerHTML = m.quickCmds.map(c =>
+    `<button class="qcmd" onclick="injectCmd('${c}')">${c}</button>`
+  ).join('');
+}
+
+function injectCmd(cmd) {
+  document.getElementById('user-input').value = cmd;
+  document.getElementById('user-input').focus();
+}
+
+// ── RENDER MESSAGES ────────────────────────────────────────────────
+function renderMessages() {
+  const area = document.getElementById('messages');
+  const history = histories[currentMode];
+
+  if (history.length === 0) {
+    area.innerHTML = `
+      <div class="welcome-msg" id="welcome-msg">
+        <div class="wm-title" id="wm-title" style="color:${MODES[currentMode].color}">${MODES[currentMode].welcome}</div>
+        <div id="wm-sub">${MODES[currentMode].welcomeSub}</div>
+      </div>
+      <div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>`;
+    return;
+  }
+
+  const msgs = history.filter(h => h.role !== 'system').map(h => {
+    const isUser = h.role === 'user';
+    const formatted = formatContent(h.content);
+    return `
+      <div class="msg ${isUser ? 'user' : 'assistant'}">
+        <div class="msg-meta">
+          <span class="role-tag">${isUser ? 'SEN' : MODES[currentMode].name}</span>
+        </div>
+        <div class="msg-bubble">${formatted}</div>
+      </div>`;
+  }).join('');
+
+  area.innerHTML = msgs + `<div class="typing-indicator" id="typing"><span></span><span></span><span></span></div>`;
+  area.scrollTop = area.scrollHeight;
+}
+
+function formatContent(text) {
+  // Code block
+  text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
+    `<pre>${escHtml(code.trim())}</pre>`);
+  // Inline code
+  text = text.replace(/`([^`]+)`/g, (_, c) => `<code>${escHtml(c)}</code>`);
+  // Bold
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  return text;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── SEND MESSAGE ───────────────────────────────────────────────────
+async function sendMessage() {
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const btn = document.getElementById('send-btn');
+  input.value = '';
+  autoResize(input);
+  btn.disabled = true;
+
+  // If first message, init with system prompt
+  if (histories[currentMode].length === 0) {
+    histories[currentMode].push({ role: 'system', content: MODES[currentMode].system });
+  }
+
+  histories[currentMode].push({ role: 'user', content: text });
+  msgCount++;
+  document.getElementById('msg-count').textContent = msgCount;
+
+  renderMessages();
+  document.getElementById('typing').style.display = 'flex';
+  document.getElementById('messages').scrollTop = 9999;
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages: histories[currentMode],
+        temperature: 0.5,
+        max_tokens: 1200
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    const reply = data.choices[0].message.content;
+    histories[currentMode].push({ role: 'assistant', content: reply });
+    msgCount++;
+    document.getElementById('msg-count').textContent = msgCount;
+
+  } catch (e) {
+    histories[currentMode].push({
+      role: 'assistant',
+      content: `⚠ Bağlantı hatası: ${e.message}\n\nGroq API'ye ulaşılamadı. API anahtarını ve internet bağlantını kontrol et.`
+    });
+  }
+
+  document.getElementById('typing').style.display = 'none';
+  renderMessages();
+  btn.disabled = false;
+  input.focus();
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function clearChat() {
+  histories[currentMode] = [];
+  renderMessages();
+  showNotif('Sohbet temizlendi');
+}
+
+function exportChat() {
+  const history = histories[currentMode].filter(h => h.role !== 'system');
+  if (!history.length) { showNotif('Dışa aktarılacak mesaj yok'); return; }
+  const txt = history.map(h => `[${h.role.toUpperCase()}]\n${h.content}\n`).join('\n---\n\n');
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `cyberwordai_${currentMode}_${Date.now()}.txt`;
+  a.click();
+  showNotif('Sohbet dışa aktarıldı');
+}
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = '▸ ' + msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ── CLOCK & SESSION ────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toTimeString().slice(0,8);
+
+  const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const s = String(elapsed % 60).padStart(2,'0');
+  document.getElementById('session-time').textContent = `${m}:${s}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+// ── INIT ───────────────────────────────────────────────────────────
+renderQuickCmds();
+</script>
+</body>
+</html>
